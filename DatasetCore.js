@@ -1,71 +1,44 @@
-const Store = require('./StoreAdaptor')
-// const isMatch = require('./isMatch')
+const Store = require('./StoreAdapter')
 
 class DatasetCore {
+  // ### `constructor` constructs the internal store and populates it with the specified quads
   constructor (quads) {
     Object.defineProperty(this, '_store', { value: new Store(quads) })
-    // this.quads = new Set()
-    //
-    // if (quads) {
-    //   for (const quad of quads) {
-    //     this.quads.add(quad)
-    //   }
-    // }
   }
 
+  // ### `size` the number of quads in the size
   get size () {
     return this._store.size
-    // return this.quads.size
   }
 
+  // ### `add` adds rdf.Quad if it is not already in the store
   add (quad) {
-    this._store._add(quad)
-    // if (!this.has(quad)) {
-    //   this.quads.add(quad)
-    // }
+    this._store.add(quad)
     return this
   }
 
+  // ### `delete` removes rdf.Quad from the store
   delete (quad) {
-    this._store._delete(quad)
-    // for (const localQuad of this) {
-    //   if (isMatch(quad, localQuad.subject, localQuad.predicate, localQuad.object, localQuad.graph)) {
-    //     this.quads.delete(localQuad)
-    //     return this
-    //   }
-    // }
+    this._store.delete(quad)
     return this
   }
 
+  // ### `has` checks whether the store contains the specified rdf.Quad
   has (quad) {
-    return this._store._has(quad)
-    // for (const other of this) {
-    //   if (isMatch(other, quad.subject, quad.predicate, quad.object, quad.graph)) {
-    //     return true
-    //   }
-    // }
-    // return false
+    return this._store.has(quad)
   }
 
+  // ### `match` yields a new dataset from the matching rdf.Quad-s
+  // Setting any field to `undefined` or `null` indicates a wildcard.
   match (subject, predicate, object, graph) {
-    const matches = this._store._match(subject, predicate, object, graph)
-    // const matches = this._store.getQuads(subject, predicate, object, graph)
-    // // const matches = new Set()
-    // // for (const quad of this) {
-    // //   if (isMatch(quad, subject, predicate, object, graph)) {
-    // //     matches.add(quad)
-    // //   }
-    // // }
-    // console.log(`Matches ${matches.length}: ` + matches.map(v => JSON.stringify(v)).join('\n  '))
-    return new this.constructor(matches) // Note: matches contain N3.Quad-s
+    var matches = this._store.match(subject, predicate, object, graph)
+    return new this.constructor(matches)
   }
 
+  // ### `iterator` yields an iterator to the storing rdf.Quad-s
   [Symbol.iterator] () {
     return this._store[Symbol.iterator]()
-    // return this.quads[Symbol.iterator]()
   }
 }
-
-// Object.defineProperty(DatasetCore.prototype, '_store', { value: new Store(quads) })
 
 module.exports = DatasetCore

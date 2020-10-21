@@ -145,23 +145,7 @@ function runTests (rdf) {
       it('should use the given subject to select Quads', () => {
         const quad1 = rdf.quad(ex.subject1, ex.predicate, ex.object)
         const quad2 = rdf.quad(ex.subject2, ex.predicate, ex.object)
-        // const quad2 = rdf.quad('http://example.org/subject1', 'http://example.org/predicate', 'http://example.org/object')
-        // const quad1 = rdf.quad('http://example.org/1', ex.predicate, ex.object)
-        // const quad2 = rdf.quad('http://example.org/2', ex.predicate, ex.object)
-        // console.log('Quad1 args: ' + [ex.subject1, ex.predicate, ex.object].map(v => JSON.stringify(v)).join(' '))
         const dataset = rdf.dataset([quad1, quad2])
-        // console.log('Input quads: ' + [quad1, quad2].map(v => JSON.stringify(v)).join('\n  '))
-        // console.log('Storage quads: ' + dataset._store.getQuads().map(v => JSON.stringify(v)).join('\n  '))
-        // console.log('Storage has quad2: ' + dataset.has(quad2))
-
-        // var rquad = quad2
-        // console.log('rquad: ' + JSON.stringify(rquad))
-        // var mrq = [rquad.subject, rquad.predicate, rquad.object, rquad.graph].map(
-        //   v => (v && v.value !== null) ? N3.DataFactory.namedNode(v.value) : null
-        //   // v => v ? N3.DataFactory.namedNode(v.value) : v
-        // )
-        // console.log('rquad mapped: ' + JSON.stringify(mrq))
-        // console.log('rquad mapped converted: ' + JSON.stringify(dataset._store._toN3Quad(rquad)))
 
         const matches = dataset.match(ex.subject2)
 
@@ -228,7 +212,10 @@ function runTests (rdf) {
         const iterator = dataset[Symbol.iterator]()
 
         assert.strictEqual(typeof iterator.next, 'function')
+        console.log('Inter func val: ' + iterator.value)
+        // console.log('Inter next(): ' + JSON.stringify(iterator.next()))
         assert.strictEqual(typeof iterator.next().value, 'object')
+        console.log('Inter next: ' + typeof iterator.next().value)
       })
 
       it('should iterate over all Quads', () => {
