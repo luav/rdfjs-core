@@ -62,8 +62,8 @@ class StoreAdapter extends N3.Store {
             // console.log('        eobjs: ' + JSON.stringify(eobjs))
             for (var iobj in eobjs) {
               // console.log('raw res:' + JSON.stringify(rdf.quad(isubj, ipred, iobj, igraph)))
-              console.log('res:' + JSON.stringify(rdf.quad([isubj, ipred, iobj, igraph].map(uid => this._entities[uid]))))
-              yield rdf.quad([isubj, ipred, iobj, igraph].map(uid => this._entities[uid]))
+              console.log('res:' + JSON.stringify(rdf.quad(...[isubj, ipred, iobj, igraph].map(uid => this._entities[uid]))))
+              yield rdf.quad(...[isubj, ipred, iobj, igraph].map(uid => this._entities[uid]))
             }
           }
         }

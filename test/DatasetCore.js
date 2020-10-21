@@ -224,17 +224,6 @@ function runTests (rdf) {
 
         const output = rdf.dataset()
 
-        // let item = iterator.next()
-        // while (item.done === false) {
-        //   console.log('item: ' + JSON.stringify(item))
-        //   console.log('item.done: ' + item.done)
-        //   output.add(item.value)
-        //   item = iterator.next()
-        //   console.log('item.done: ' + item.done)
-        // }
-
-        // console.log('Inter next: ' + JSON.stringify(iterator.next()))
-        // console.log('Inter next: ' + JSON.stringify(iterator.next()))
         for (let item = iterator.next(); !item.done; item = iterator.next()) {
           console.log('item: ' + JSON.stringify(item))
           try {
