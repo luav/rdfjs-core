@@ -212,10 +212,7 @@ function runTests (rdf) {
         const iterator = dataset[Symbol.iterator]()
 
         assert.strictEqual(typeof iterator.next, 'function')
-        console.log('Inter func val: ' + iterator.value)
-        // console.log('Inter next(): ' + JSON.stringify(iterator.next()))
         assert.strictEqual(typeof iterator.next().value, 'object')
-        console.log('Inter next: ' + typeof iterator.next().value)
       })
 
       it('should iterate over all Quads', () => {
@@ -227,8 +224,24 @@ function runTests (rdf) {
 
         const output = rdf.dataset()
 
-        for (let item = iterator.next(); item.value; item = iterator.next()) {
-          output.add(item.value)
+        // let item = iterator.next()
+        // while (item.done === false) {
+        //   console.log('item: ' + JSON.stringify(item))
+        //   console.log('item.done: ' + item.done)
+        //   output.add(item.value)
+        //   item = iterator.next()
+        //   console.log('item.done: ' + item.done)
+        // }
+
+        // console.log('Inter next: ' + JSON.stringify(iterator.next()))
+        // console.log('Inter next: ' + JSON.stringify(iterator.next()))
+        for (let item = iterator.next(); !item.done; item = iterator.next()) {
+          console.log('item: ' + JSON.stringify(item))
+          try {
+            output.add(item.value)
+          } catch (error) {
+            console.error(error)
+          }
         }
 
         assert.strictEqual(output.size, 2)
