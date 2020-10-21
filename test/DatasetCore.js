@@ -225,7 +225,6 @@ function runTests (rdf) {
         const output = rdf.dataset()
 
         for (let item = iterator.next(); !item.done; item = iterator.next()) {
-          console.log('item: ' + JSON.stringify(item))
           try {
             output.add(item.value)
           } catch (error) {
