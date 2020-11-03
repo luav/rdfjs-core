@@ -1,56 +1,11 @@
 // **DatasetCore** implements [RDF DatasetCore interface](https://rdf.js.org/dataset-spec/#datasetcore-interface) based on N3.JS store
 const DataFactory = require('@rdfjs/data-model')
 // const DataTypes = require('@types/rdf-js')
-// const rdf = require('@rdfjs/data-model')
-// const N3DataFactory = require('@n3/N3DataFactory')
-// import { default as N3DataFactory } from '@n3/N3DataFactory'
+// const DataFactory = require('@n3/N3DataFactory')
 // import { default as N3DataFactory, termToId, termFromId } from '@n3/N3DataFactory';
-// import { termToId, termFromId } from '@n3/N3DataFactory';
-// import namespaces from '@n3/IRIs'
 // const n3 = require('n3')
 
 class DatasetCore {
-  // // ### `constructor` constructs the internal store and populates it with the specified quads
-  // constructor (quads) {
-  //   Object.defineProperty(this, '_store', { value: new Store(quads) })
-  // }
-  //
-  // // ### `size` the number of quads in the size
-  // get size () {
-  //   return this._store.size
-  // }
-  //
-  // // ### `add` adds rdf.Quad if it is not already in the store
-  // add (quad) {
-  //   this._store.add(quad)
-  //   return this
-  // }
-  //
-  // // ### `delete` removes rdf.Quad from the store
-  // delete (quad) {
-  //   this._store.delete(quad)
-  //   return this
-  // }
-  //
-  // // ### `has` checks whether the store contains the specified rdf.Quad
-  // has (quad) {
-  //   return this._store.has(quad)
-  // }
-  //
-  // // ### `match` yields a new dataset from the matching rdf.Quad-s
-  // // Setting any field to `undefined` or `null` indicates a wildcard.
-  // match (subject, predicate, object, graph) {
-  //   var matches = this._store.match(subject, predicate, object, graph)
-  //   return new this.constructor(matches)
-  // }
-  //
-  // // ### `iterator` yields an iterator to the storing rdf.Quad-s
-  // [Symbol.iterator] () {
-  //   return this._store[Symbol.iterator]()
-  // }
-
-  // console.trace('constructor')
-
   // ### Construct the storage and populate it if required
   // quads: Array(Quad)  - quads to be stored
   // options: Object  - storage options, includes N3Store options and the following options to store non-standard (i.e., extended) quads:
@@ -83,7 +38,7 @@ class DatasetCore {
     this._cfactory = options && 'cfactory' in options ? options.cfactory.bind(this) : undefined
 
     options = options || {}
-    this._factory = options.factory || DataFactory // N3DataFactory
+    this._factory = options.factory || DataFactory
 
     // Add quads if passed
     if (quads) {
@@ -91,11 +46,9 @@ class DatasetCore {
         // Update contexts for the added quad
         if (this._addQuad(quad) && this._contexts) {
           this._contexts.set(this._contextKey(quad), this._contexter(quad))
-          // console.log(`  context is updated: ${JSON.stringify(this._contextKey(quad))} -> ${JSON.stringify(this._contexter(quad))}`)
         }
       }
     }
-    // console.log(`Constructed size: ${this.size}, _contexts size: ${this._contexts.size}`)
   }
 
   // ### `size` returns the number of quads in the store
@@ -209,7 +162,6 @@ class DatasetCore {
     object = termToId(object)
     graph = termToId(graph)
 
-    // console.log(`  internal repr: ${JSON.stringify(subject)}, ${JSON.stringify(predicate)}, ${JSON.stringify(object)}, ${JSON.stringify(graph)}`)
     // Find the graph that will contain the triple
     var graphItem = this._graphs[graph]
     // Create the graph if it doesn't exist yet
@@ -229,7 +181,6 @@ class DatasetCore {
     predicate = ids[predicate] || (ids[entities[++this._id] = predicate] = this._id)
     object = ids[object] || (ids[entities[++this._id] = object] = this._id)
 
-    // console.log(`  internal ids: ${JSON.stringify(subject)}, ${JSON.stringify(predicate)}, ${JSON.stringify(object)}, ${JSON.stringify(graph)}`)
     var changed = this._addToIndex(graphItem.subjects, subject, predicate, object)
     if (changed) {
       this._addToIndex(graphItem.predicates, predicate, object, subject)
