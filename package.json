@@ -1,6 +1,6 @@
 {
   "name": "@luav/rdfjs-core",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "RDFJS DatasetCore implementation based on N3.JS",
   "main": "index.js",
   "scripts": {
@@ -28,8 +28,7 @@
   },
   "homepage": "https://github.com/luav/rdfjs-core",
   "dependencies": {
-    "@rdfjs/data-model": "^1.1.1",
-    "n3": "^1.6.3"
+    "@rdfjs/data-model": "^1.1.1"
   },
   "devDependencies": {
     "@rdfjs/namespace": "^1.0.0",
