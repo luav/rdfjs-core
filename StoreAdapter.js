@@ -5,16 +5,16 @@ const n3 = require('n3')
 class StoreAdapter extends n3.Store {
   // ### Construct the storage and populate it if required
   // quads: Array(Quad)  - quads to be stored
-  // options: Object  - storage options, includes N3Store options and:
+  // options: Object  - storage options, includes N3Store options and the following options to store non-standard (i.e., extended) quads:
   //   contexts: Map(key: String, context: String|Object) | null  - quad contexts to be recovered
   //   contexter: function(Quad) -> context: String|Object  - quad context extractor
   //   cfactory: method_function(context: String|Object) -> quad: Quad  - contextual quad factory
   constructor (quads, options) {
     super(quads, options)
     // Mapping of a storage keys to the context of the respective quad, where the context
-    this.contexts = options && options.contexts ? options.contexts : new Map()
-    this.contexter = options && options.contexter ? options.contexter : quad => quad
-    this.cfactory = options && options.cfactory ? options.cfactory.bind(this) : undefined
+    this.contexts = options && 'contexts' in options ? options.contexts : new Map()
+    this.contexter = options && 'contexter' in options ? options.contexter : quad => quad
+    this.cfactory = options && 'cfactory' in options ? options.cfactory.bind(this) : undefined
 
     if (quads && this.contexts) {
       var iquad = 0
@@ -27,15 +27,12 @@ class StoreAdapter extends n3.Store {
             for (var ipred in epreds) {
               var eobjs = epreds[ipred]
               for (var iobj in eobjs) {
-                // console.log('res:' + JSON.stringify(rdf.quad(...[isubj, ipred, iobj, igraph].map(uid => this._entities[uid]))))
                 this.contexts.set(StoreAdapter._contextKeyRaw(isubj, ipred, iobj, igraph), this.contexter(quads[iquad++]))
-                // console.log(`Added context: ${StoreAdapter._contextKeyRaw(isubj, ipred, iobj, igraph)} -> ${JSON.stringify(this.contexter(quads[iquad - 1]))}`)
               }
             }
           }
         }
       }
-      // console.log(`Contextxs size: ${this.contexts.size} / ${this.size}`)
     }
   }
 
@@ -46,7 +43,6 @@ class StoreAdapter extends n3.Store {
     const ipred = this._termId(quad.predicate)
     const iobj = this._termId(quad.object)
     const igraph = n3.termToId(quad.graph)
-    // console.log(`_contextKey(${JSON.stringify(quad)}): ${StoreAdapter._contextKeyRaw(isubj, ipred, iobj, igraph)}`)
     return StoreAdapter._contextKeyRaw(isubj, ipred, iobj, igraph)
   }
 
@@ -122,7 +118,6 @@ class StoreAdapter extends n3.Store {
           for (var ipred in epreds) {
             var eobjs = epreds[ipred]
             for (var iobj in eobjs) {
-              // console.log('res:' + JSON.stringify(rdf.quad(...[isubj, ipred, iobj, igraph].map(uid => this._entities[uid]))))
               yield rdf.quad(...[isubj, ipred, iobj, igraph].map(uid => this._entities[uid]))
             }
           }
