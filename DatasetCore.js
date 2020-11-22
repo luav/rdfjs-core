@@ -120,6 +120,36 @@ class DatasetCore {
       : this._iteratorRaw()
   }
 
+  // -- Artificial protected API -----------------------------------------------
+  // See: https://github.com/zazuko/issues-private/issues/17#issuecomment-686153201
+  _getQuad (subjectId, predicateId, objectId, graphId) {
+    const ckey = DatasetCore._contextKeyRaw(subjectId, predicateId, objectId, graphId)
+    return this._cfactory
+      ? this._cfactory(this._contexts.get(ckey))
+      : this._contexts.get(ckey)
+  }
+
+  _setQuad (quad, subjectId, predicateId, objectId, graphId) {
+    this._addQuad(quad)
+    // Update contexts for the added quad
+    if (this._contexts) {
+      const ckey = DatasetCore._contextKeyRaw(subjectId, predicateId, objectId, graphId)
+      this._contexts.set(ckey, this._contexter(quad))
+    }
+  }
+
+  _deleteQuad (subjectId, predicateId, objectId, graphId) {
+    if (this._contexts) {
+      const quad = this._getQuad(subjectId, predicateId, objectId, graphId)
+      const ckey = DatasetCore._contextKeyRaw(subjectId, predicateId, objectId, graphId)
+      this._contexts.delete(ckey)
+      if (quad) {
+        this._removeQuad(quad)
+      }
+    }
+  }
+  // -- End of Artificial protected API ----------------------------------------
+
   // ### `_contextKey` produces String context key for the quad
   _contextKey (quad) {
     // Convert terms to internal string representation
